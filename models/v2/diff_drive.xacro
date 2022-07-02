@@ -1,0 +1,205 @@
+<?xml version='1.0'?>
+
+<!-- choose a name space and start xacro -->
+<robot name="diff_drive_v2" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+  <!-- Start by including all required xacro files which hold the macros -->
+  <xacro:include filename="$(find mower_v1)/models/v2/diff_drive.gazebo" />
+  <!-- <xacro:include filename="$(find mower_v1)/models/v2/materials.xacro"   /> -->
+  <!-- <xacro:include filename="$(find mower_v1)/models/v2/macros.xacro"      /> -->
+  <xacro:include filename="$(find mower_v1)/models/v2/parameter.xacro"   />
+
+  <!-- <link name='base_link'>
+    <pose>0 0 0 0 0 0</pose>
+  </link>
+  <joint type="fixed" name="base_link_to_chassis">
+    <child link="chassis_link"/>
+    <parent link="base_link"/>
+  </joint> -->
+
+  <!-- Define the chassis of the differential drive robot, which is our base -->
+  <link name='base_link'>
+    <!-- Define inertial system for the chassis -->
+    <inertial>
+      <mass value="${m_base}"/>
+      <xacro:box_inertia m="${m_base}" x="${x_base}" y="${y_base}" z="${z_base}"/>
+    </inertial>
+    <!-- Define collision sorrounding box -->
+    <collision name='collision'>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <box size="${x_base_coll} ${y_base_coll} ${z_base_coll}"/>
+      </geometry>
+    </collision>
+    <!-- Define visualization structure -->
+    <visual name='base_link_visual'>
+	    <origin xyz="0 0 ${r_wheel}" rpy=" 0 0 0"/>
+      <geometry>
+        <box size="${x_base} ${y_base} ${z_base}"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <!-- Add the wheels for the robot -->
+  <link name="f_left_wheel">
+    <collision name="collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${r_wheel}" length="${h_wheel}"/>
+      </geometry>
+    </collision>
+    <visual name="f_left_wheel_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${r_wheel}" length="${h_wheel}"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.0 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="${m_wheel}"/>
+      <cylinder_inertia m="${m_wheel}" r="${r_wheel}" h="${h_wheel}"/>
+      <xacro:cylinder_inertia m="${m_wheel}" r="${r_wheel}" h="${h_wheel}"/>
+    </inertial>
+  </link>
+
+  <!-- Add the wheels for the robot -->
+  <link name="r_left_wheel">
+    <collision name="collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${r_wheel}" length="${h_wheel}"/>
+      </geometry>
+    </collision>
+    <visual name="r_left_wheel_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${r_wheel}" length="${h_wheel}"/>
+      </geometry>
+      <material name="blue">
+        <color rgba="0.0 0.0 0.8 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="${m_wheel}"/>
+      <cylinder_inertia m="${m_wheel}" r="${r_wheel}" h="${h_wheel}"/>
+      <xacro:cylinder_inertia m="${m_wheel}" r="${r_wheel}" h="${h_wheel}"/>
+    </inertial>
+  </link>
+
+  <link name="f_right_wheel">
+    <collision name="collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${r_wheel}" length="${h_wheel}"/>
+      </geometry>
+    </collision>
+    <visual name="f_right_wheel_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${r_wheel}" length="${h_wheel}"/>
+      </geometry>
+      <material name="brown">
+        <color rgba="${222/255} ${207/255} ${195/255} 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="${m_wheel}"/>
+      <cylinder_inertia m="${m_wheel}" r="${r_wheel}" h="${h_wheel}"/>
+      <xacro:cylinder_inertia m="${m_wheel}" r="${r_wheel}" h="${h_wheel}"/>
+    </inertial>
+  </link>
+
+  <link name="r_right_wheel">
+    <collision name="collision">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${r_wheel}" length="${h_wheel}"/>
+      </geometry>
+    </collision>
+    <visual name="r_right_wheel_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${r_wheel}" length="${h_wheel}"/>
+      </geometry>
+      <material name="green">
+        <color rgba="0.0 0.8 0.0 1.0"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="${m_wheel}"/>
+      <cylinder_inertia m="${m_wheel}" r="${r_wheel}" h="${h_wheel}"/>
+      <xacro:cylinder_inertia m="${m_wheel}" r="${r_wheel}" h="${h_wheel}"/>
+    </inertial>
+  </link>
+
+  <!-- Set joints for the wheels which can be controlled over ROS -->
+  <joint type="continuous" name="f_left_wheel_hinge">
+    <origin xyz="0.2 0.25 0" rpy="1.5707 0 0"/>
+    <child link="f_left_wheel"/>
+    <parent link="base_link"/>
+    <axis xyz="0 0 1" rpy="0 0 0"/>
+    <limit effort="100" velocity="100"/>
+    <!-- <joint_properties damping="0.0" friction="0.0"/> -->
+  </joint>
+
+  <joint type="continuous" name="r_left_wheel_hinge">
+    <origin xyz="-0.30 0.25 0" rpy="1.5707 0 0"/>
+    <child link="r_left_wheel"/>
+    <parent link="base_link"/>
+    <axis xyz="0 0 1" rpy="0 0 0"/>
+    <limit effort="100" velocity="100"/>
+    <!-- <joint_properties damping="0.0" friction="0.0"/> -->
+  </joint>
+  <joint type="continuous" name="f_right_wheel_hinge">
+    <origin xyz="0.20 -0.25 0" rpy="1.5707 0 0"/>
+    <child link="f_right_wheel"/>
+    <parent link="base_link"/>
+    <axis xyz="0 0 1" rpy="0 0 0"/>
+    <limit effort="100" velocity="100"/>
+    <!-- <joint_properties damping="0.0" friction="0.0"/> -->
+  </joint>
+  <joint type="continuous" name="r_right_wheel_hinge">
+    <origin xyz="-0.30 -0.25 0" rpy="1.5707 0 0"/>
+    <child link="r_right_wheel"/>
+    <parent link="base_link"/>
+    <axis xyz="0 0 1" rpy="0 0 0"/>
+    <limit effort="100" velocity="100"/>
+    <joint_properties damping="0.0" friction="0.0"/>
+  </joint>
+
+  <!-- Add a Hokuyo Laser -->
+  <link name="laser_link">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+		<box size="${x_hokuyo} ${y_hokuyo} ${z_hokuyo}"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <!-- <mesh filename="package://rrbot_description/meshes/hokuyo.dae"/> -->
+        <box size="${x_hokuyo} ${y_hokuyo} ${z_hokuyo}"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <mass value="1e-5" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+  
+  <joint name="hokuyo_joint" type="fixed">
+    <axis xyz="0 1 0" />
+    <origin xyz="0 0 ${z_chassis/2 + z_hokuyo/2}" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="laser_link"/>
+  </joint>
+
+ </robot>

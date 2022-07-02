@@ -1,0 +1,10 @@
+<launch>
+    <include file="$(find mower_v1)/launch/apartment.launch" />
+    <node pkg="gmapping" name="slam_gampping" type="slam_gmapping" output="screen">
+        <param name="scan" value="scan"/>
+        <param name="odom_frame" value="odom_link"/>
+        <param name="base_frame" value="base_link"/>
+    </node>
+    <!-- <node pkg="tf" type="static_transform_publisher" name="link1_broadcaster" args="0.20 0 0 0 0 0 odom_link laser 50" /> -->
+    <!-- <node pkg="tf" type="static_transform_publisher" name="link1_broadcaster" args="1 0 0 0 0 0 base_link laser 100" /> -->
+</launch>

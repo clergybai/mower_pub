@@ -1,0 +1,13 @@
+<launch>
+    <!-- values passed by command line input -->
+    <arg name="model" />
+    <arg name="gui" default="False" />
+
+    <!-- set these parameters on Parameter Server -->
+    <param name="robot_description" textfile="$(find mower_v1)/urdf/$(arg model)" />
+    <param name="use_gui" value="$(arg gui)"/>
+
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mower_v1)/urdf.rviz" required="true" />
+</launch>

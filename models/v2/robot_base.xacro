@@ -1,0 +1,17 @@
+<link name="base_link">
+    <visual>
+        <geometry>
+            <box size="0.2 .3 .1"/>
+        </geometry>
+        <origin rpy="0 0 1.54" xyz="0 0 0.05"/>
+        <material name="white">
+            <color rgba="1 1 1 1"/>
+        </material>
+    </visual>
+    <collision>
+        <geometry>
+            <box size="0.2 .3 0.1"/>
+        </geometry>
+    </collision>
+    <xacro:default_inertial mass="10"/>
+</link>
